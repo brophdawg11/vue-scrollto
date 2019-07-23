@@ -390,15 +390,18 @@
       diffX = targetX - initialX;
 
       if (!force) {
+        // When the container is the default (body) we need to use the viewport
+        // height, not the entire body height
+        var containerHeight = container.tagName.toLowerCase() === "body" ? document.documentElement.clientHeight || window.innerHeight : container.offsetHeight;
         var containerTop = initialY;
-        var containerBottom = containerTop + container.offsetHeight;
+        var containerBottom = containerTop + containerHeight;
         var elementTop = targetY;
         var elementBottom = elementTop + element.offsetHeight;
 
         if (elementTop >= containerTop && elementBottom <= containerBottom) {
           // make sure to call the onDone callback even if there is no need to
           // scroll the container. Fixes #111 (ref #118)
-          onDone(element);
+          if (onDone) onDone(element);
           return;
         }
       }
